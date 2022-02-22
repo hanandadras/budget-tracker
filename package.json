@@ -20,7 +20,10 @@
   },
   "homepage": "https://github.com/hanandadras/budget-tracker#readme",
   "dependencies": {
+    "compression": "^1.7.4",
     "express": "^4.17.3",
+    "mongoose": "^6.2.3",
+    "morgan": "^1.10.0",
     "webpack": "^5.69.1",
     "webpack-cli": "^4.9.2"
   }
