@@ -2,19 +2,21 @@ const CACHE_NAME = 'my-site-cache-v1';
 const DATA_CACHE_NAME = 'data-cache-v1';
 
 const FILES_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/favicon.ico',
-  '/manifest.json',
-  '/assets/css/style.css',
-  '/icons/imagecompressor/icon-72x72-min.png',
-  '/icons/imagecompressor/icon-96X96-min.png',
-  '/icons/imagecompressor/icon-128X128-min.png',
-  '/icons/imagecompressor/icon-144X144-min.png',
-  '/icons/imagecompressor/icon-152X152-min.png',
-  '/icons/imagecompressor/icon-192X192-min.png',
-  '/icons/imagecompressor/icon-384X384-min.png',
-  '/icons/imagecompressor/icon-512X512-min.png',
+  
+  './index.html',
+  // './favicon.ico',
+  './manifest.json',
+  './css/styles.css',
+  './js/idb.js',
+  './js/index.js',
+  './icons/imagecompressor/icon-72x72-min.png',
+  './icons/imagecompressor/icon-96X96-min.png',
+  './icons/imagecompressor/icon-128X128-min.png',
+  './icons/imagecompressor/icon-144X144-min.png',
+  './icons/imagecompressor/icon-152X152-min.png',
+  './icons/imagecompressor/icon-192X192-min.png',
+  './icons/imagecompressor/icon-384X384-min.png',
+  './icons/imagecompressor/icon-512X512-min.png',
 ]
  
 
@@ -27,7 +29,7 @@ self.addEventListener('install', function(evt) {
     })
   );
 
-  self.skipWaiting();
+  // self.skipWaiting();
 });
 
 // Activate the service worker and remove old data from the cache

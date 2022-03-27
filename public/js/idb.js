@@ -1,3 +1,10 @@
+const indexedDB = 
+    window.indexedDB ||
+    window.mozIndexedDB ||
+    window.webkitIndexedDB ||
+    window.msIndexedDB ||
+    window.shimIndexedDB 
+
 // create variable to hold db connection
 let db;
 // establish a connection to IndexedDB database called 'budget-tracker' and set it to version 1
@@ -15,12 +22,12 @@ request.onupgradeneeded = function (event) {
 
 //DO WE NEED IT FOR WITHDRAWAL?????
 // this event will emit if the database version changes (nonexistant to version 1, v1 to v2, etc.)
-request.onupgradeneeded = function (event) {
-  // save a reference to the database 
-  const db = event.target.result;
-  // create an object store (table) called `new_withdrawal`, set it to have an auto incrementing primary key of sorts 
-  db.createObjectStore('new_withdrawal', { autoIncrement: true });
-};
+// request.onupgradeneeded = function (event) {
+//   // save a reference to the database 
+//   const db = event.target.result;
+//   // create an object store (table) called `new_withdrawal`, set it to have an auto incrementing primary key of sorts 
+//   db.createObjectStore('new_withdrawal', { autoIncrement: true });
+// };
 
 //event listener created when the connex to db is open
 // upon a successful 
@@ -31,7 +38,7 @@ request.onsuccess = function (event) {
   // check if app is online, if yes run uploadDeposit() function to send all local db data to api
   if (navigator.onLine) {
     // we haven't created this yet, but we will soon, so let's comment it out for now
-    // uploadDeposit();
+    uploadDeposit();
   }
 };
 
@@ -58,10 +65,14 @@ request.onsuccess = function (event) {
   // check if app is online, if yes run uploadWithdra() function to send all local db data to api
   if (navigator.onLine) {
     // we haven't created this yet, but we will soon, so let's comment it out for now
-    // uploadWithdrawal();
+    uploadWithdrawal();
   }
 };
 
+// return error code/message
+request.onerror = event =>{
+  console.log(event.target.errorCode)
+}
 
 // This function will be executed if we attempt to submit a new deposit and there's no internet connection
 function saveRecord(record) {
@@ -90,13 +101,11 @@ function uploadDeposit() {
   const getAll = depositObjectStore.getAll();
 
 
-
-
   // upon a successful .getAll() execution, run this function
   getAll.onsuccess = function () {
     // if there was data in indexedDb's store, let's send it to the api server
     if (getAll.result.length > 0) {
-      fetch('/api/deposit', {
+      fetch('/api/transaction', {
         method: 'POST',
         body: JSON.stringify(getAll.result),
         headers: {
@@ -104,7 +113,9 @@ function uploadDeposit() {
           'Content-Type': 'application/json'
         }
       })
-        .then(response => response.json())
+        .then(response => {
+          return response.json()
+        })
         .then(serverResponse => {
           if (serverResponse.message) {
             throw new Error(serverResponse);
@@ -125,7 +136,6 @@ function uploadDeposit() {
   };
 }
 
-
 //function that will handle collecting all of the data from the new_withdrawal object store in IndexedDB 
 //and POST it to the server
 
@@ -138,7 +148,7 @@ function uploadWithdrawal() {
   const withdrawalObjectStore = transaction.objectStore('new_withdrawal');
 
   // get all records from store and set to a variable
-  const getAll = withdrawalObjectStore.getAll();
+  //const getAll = withdrawalObjectStore.getAll();
 }
 
 //the .getAll() method is an asynchronous function that we have to attach a
@@ -196,5 +206,5 @@ request.onerror = function (event) {
 
 
 // listen for app coming back online
-window.addEventListener('online', uploadDeposit);
 window.addEventListener('online', uploadWithdrawal);
+window.addEventListener('online', uploadDeposit);
